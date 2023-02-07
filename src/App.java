@@ -4,10 +4,12 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class App {
 
     static ArrayList<Player> playerList = new ArrayList<>();
+    static HashMap<String, Sport> sportMap = new HashMap<>();
 
     /**
      * Players and sports application
@@ -19,13 +21,32 @@ public class App {
      * Each new player object is added to an ArrayList of Player objects
      * <br>
      * 
-     * @param args - args[0] will hold name of input file (to be done in lab)
+     * @param args 
      */
     public static void main(String[] args)  {
         loadPlayerFile();
+        initSportMap();
         System.out.println(playerList);
+        System.out.println(sportMap);
     }
     
+
+    private static void initSportMap() {
+        for(Player player: playerList){
+            ArrayList<String> sportsList = player.getSports();
+            for (String sportName: sportsList)
+            {
+                Sport sport = sportMap.get(sportName);
+                if(sport == null)
+                {
+                    sport = new Sport(sportName);
+                    sportMap.put(sportName,sport);
+                }
+                sport.addPlayerName(player.getName());
+            }
+        }
+    }
+
 
     /**
      * 
@@ -34,7 +55,7 @@ public class App {
      * 
      * 1 - Open input and output files
      * 2 - For each line of input
-     * 3 -- split line into tokans
+     * 3 -- split line into tokens
      * 4 -- create new player whose name is given by token[0]
      * 5 -- add remaining tokens to player's list of sports 
      * 6 - add player to player list
@@ -46,7 +67,7 @@ public class App {
         try{
             // 1            
             FileReader fileReader = new FileReader(file);
-            BufferedReader bufferedReader = new BufferedReader(fileReader);
+            BufferedReader bufferedReader = new BufferedReader(fileReader); //never will run out of memory, a lot of stuff to read, much faster. Scanner read 1 char by 1 character
 
             // 2
             String line = bufferedReader.readLine();
@@ -81,3 +102,5 @@ public class App {
         }
     }
 }
+
+//hashmap vs array lists
